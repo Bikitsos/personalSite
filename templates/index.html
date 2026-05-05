@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="relative min-h-screen text-stone-900">
+  <!-- Floating glass nav -->
+  <nav class="sticky top-4 z-30 mx-auto mt-4 w-fit px-4">
+    <div class="glass-pill flex items-center gap-1 rounded-full px-2 py-1.5 text-[13px]">
+      <a href="/" class="rounded-full px-3 py-1.5 font-display text-stone-900 tracking-tight">
+        {{ bio.name.split()[0] }}
+      </a>
+      <span class="mx-1 h-4 w-px bg-stone-900/15"></span>
+      <a href="#about" class="rounded-full px-3 py-1.5 text-stone-700 transition hover:bg-white/60 hover:text-stone-900">About</a>
+      <a href="#work" class="rounded-full px-3 py-1.5 text-stone-700 transition hover:bg-white/60 hover:text-stone-900">Work</a>
+      <a href="#expertise" class="rounded-full px-3 py-1.5 text-stone-700 transition hover:bg-white/60 hover:text-stone-900">Expertise</a>
+      <a href="#contact" class="rounded-full px-3 py-1.5 text-stone-700 transition hover:bg-white/60 hover:text-stone-900">Contact</a>
+    </div>
+  </nav>
+
+  <main class="mx-auto max-w-3xl px-6 pt-16 pb-32 sm:pt-24">
+    <!-- Hero / manifesto -->
+    <section id="about" class="glass-strong rounded-[2rem] p-8 sm:p-14">
+      <p class="mb-4 text-[11px] font-medium uppercase tracking-[0.2em] text-stone-500">
+        {{ bio.location }}
+      </p>
+      <h1 class="font-display text-[2.25rem] leading-[1.1] text-stone-900 sm:text-[3.25rem]">
+        {{ bio.name.split()[0] }} is the Technical Director at
+        <a href="https://immix.com.cy" target="_blank" rel="noopener" class="text-stone-700 underline decoration-stone-300 decoration-2 underline-offset-[6px] transition hover:text-stone-900 hover:decoration-stone-500">DB IMMIX</a>.
+      </h1>
+
+      <div class="mt-10 space-y-5 font-display-light text-[1.35rem] leading-snug text-stone-600 sm:text-[1.6rem]">
+        <p>I build infrastructure.</p>
+        <p>I think reliable systems are quiet systems &mdash; the best ones disappear.</p>
+        <p>I think a good database schema is worth more than a thousand dashboards.</p>
+        <p>I think networks should be invisible until you need them, then obvious.</p>
+        <p>I think the cloud is just someone else&rsquo;s computer &mdash; treat it accordingly.</p>
+        <p>I think small tools, well made, beat big tools, half finished.</p>
+        <p class="text-stone-500">A few of those small tools live below.<span class="text-stone-400">*</span></p>
+      </div>
+    </section>
+
+    <!-- Work -->
+    <section id="work" class="mt-16">
+      <header class="mb-6 px-2">
+        <h2 class="font-display text-3xl tracking-tight text-stone-900">Selected Work</h2>
+        <p class="mt-1 text-sm text-stone-500">Small, useful things made along the way.</p>
+      </header>
+      <div class="grid gap-4 sm:grid-cols-2">
+        {% for project in projects %}
+        <a href="{{ project.url }}" target="_blank" rel="noopener noreferrer"
+           class="glass glass-hover group flex flex-col rounded-3xl p-6">
+          <div class="flex items-start justify-between gap-3">
+            <p class="font-display text-xl tracking-tight text-stone-900">
+              {{ project.name }}
+            </p>
+            <span class="text-stone-400 transition group-hover:translate-x-0.5 group-hover:text-stone-700" aria-hidden="true">&rarr;</span>
+          </div>
+          <p class="mt-2 text-[15px] leading-relaxed text-stone-600">{{ project.description }}</p>
+          <p class="mt-6 text-[11px] font-medium uppercase tracking-[0.18em] text-stone-500">
+            {{ project.url | replace('https://', '') }}
+          </p>
+        </a>
+        {% endfor %}
+      </div>
+    </section>
+
+    <!-- Expertise -->
+    <section id="expertise" class="mt-16">
+      <header class="mb-6 px-2">
+        <h2 class="font-display text-3xl tracking-tight text-stone-900">What I Do</h2>
+        <p class="mt-1 max-w-xl text-sm text-stone-500">
+          From cabling a rack to deploying to the cloud — and most of what sits in between.
+        </p>
+      </header>
+      <div class="space-y-4">
+        {% for group in skill_groups %}
+        <div class="glass rounded-3xl p-6 sm:p-8">
+          <div class="grid gap-5 sm:grid-cols-[12rem_1fr]">
+            <h3 class="font-display text-base tracking-tight text-stone-900">
+              {{ group.title }}
+            </h3>
+            <ul class="flex flex-wrap gap-2">
+              {% for item in group['items'] %}
+              <li class="glass-pill rounded-full px-3 py-1 text-[13px] text-stone-800">{{ item }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="mt-16">
+      <div class="glass-strong rounded-[2rem] p-8 sm:p-12">
+        <h2 class="font-display text-3xl tracking-tight text-stone-900">Say Hello</h2>
+        <p class="mt-1 text-sm text-stone-500">Always open to interesting problems.</p>
+        <ul class="mt-8 space-y-4">
+          {% for c in contacts %}
+          <li class="flex flex-wrap items-baseline gap-x-4">
+            <span class="w-20 text-[11px] font-medium uppercase tracking-[0.2em] text-stone-500">{{ c.label }}</span>
+            <a href="{{ c.href }}" target="_blank" rel="noopener noreferrer"
+               class="font-display-light text-lg text-stone-900 underline decoration-stone-300 decoration-2 underline-offset-[6px] transition hover:decoration-stone-500">{{ c.value }}</a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </section>
+
+    <footer class="mt-16 px-2 text-[13px] text-stone-500">
+      <p><span class="text-stone-400">*</span> Less, but better.</p>
+      <p class="mt-1">&copy; <span id="year"></span> {{ bio.name }}.</p>
+    </footer>
+  </main>
+</div>
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+{% endblock %}

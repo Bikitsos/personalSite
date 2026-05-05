@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}{{ bio.name }}{% endblock %}</title>
+    <meta name="description" content="{{ bio.name }} — personal site and project showcase." />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --glass-bg: rgba(255, 255, 255, 0.55);
+        --glass-bg-strong: rgba(255, 255, 255, 0.7);
+        --glass-border: rgba(255, 255, 255, 0.7);
+        --glass-shadow: 0 8px 32px -8px rgba(60, 60, 67, 0.12), inset 0 1px 0 0 rgba(255, 255, 255, 0.8);
+      }
+      html {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+      }
+      .font-display {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 600;
+        letter-spacing: -0.022em;
+      }
+      .font-display-light {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 400;
+        letter-spacing: -0.018em;
+      }
+
+      /* Soft, toned-down aurora backdrop */
+      body {
+        background-color: #f5f5f7;
+        background-image:
+          radial-gradient(at 15% 20%, rgba(210, 220, 240, 0.45) 0px, transparent 50%),
+          radial-gradient(at 85% 25%, rgba(225, 220, 235, 0.5) 0px, transparent 55%),
+          radial-gradient(at 70% 85%, rgba(215, 225, 230, 0.45) 0px, transparent 55%),
+          radial-gradient(at 25% 80%, rgba(230, 225, 220, 0.4) 0px, transparent 55%);
+        background-attachment: fixed;
+        background-size: 180% 180%;
+        animation: drift 45s ease-in-out infinite alternate;
+      }
+      @keyframes drift {
+        0%   { background-position: 0% 0%; }
+        100% { background-position: 100% 100%; }
+      }
+
+      .glass {
+        background: var(--glass-bg);
+        backdrop-filter: blur(28px) saturate(160%);
+        -webkit-backdrop-filter: blur(28px) saturate(160%);
+        border: 1px solid var(--glass-border);
+        box-shadow: var(--glass-shadow);
+      }
+      .glass-strong {
+        background: var(--glass-bg-strong);
+        backdrop-filter: blur(32px) saturate(180%);
+        -webkit-backdrop-filter: blur(32px) saturate(180%);
+        border: 1px solid var(--glass-border);
+        box-shadow: var(--glass-shadow);
+      }
+      .glass-pill {
+        background: rgba(255, 255, 255, 0.55);
+        backdrop-filter: blur(20px) saturate(160%);
+        -webkit-backdrop-filter: blur(20px) saturate(160%);
+        border: 1px solid rgba(255, 255, 255, 0.75);
+        box-shadow:
+          0 2px 10px -3px rgba(60, 60, 67, 0.1),
+          inset 0 1px 0 0 rgba(255, 255, 255, 0.85);
+      }
+
+      .glass-hover { position: relative; transition: transform .25s ease, box-shadow .25s ease; }
+      .glass-hover::before {
+        content: "";
+        position: absolute; inset: 0; border-radius: inherit;
+        background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%, rgba(255,255,255,0.2) 100%);
+        opacity: 0; transition: opacity .3s ease; pointer-events: none;
+      }
+      .glass-hover:hover { transform: translateY(-2px); box-shadow: 0 16px 40px -14px rgba(60, 60, 67, 0.2), inset 0 1px 0 0 rgba(255,255,255,0.85); }
+      .glass-hover:hover::before { opacity: 1; }
+
+      .link-underline { background-image: linear-gradient(currentColor, currentColor); background-position: 0 100%; background-repeat: no-repeat; background-size: 0% 1px; transition: background-size 250ms ease; }
+      .link-underline:hover { background-size: 100% 1px; }
+    </style>
+  </head>
+  <body class="text-stone-900 antialiased">
+    {% block content %}{% endblock %}
+  </body>
+</html>
