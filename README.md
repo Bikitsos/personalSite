@@ -58,6 +58,63 @@ Update any of these and refresh — no build step required.
 
 ---
 
+## Deployment (Podman + Cloudflare Tunnel)
+
+The site is designed to run on a Fedora server inside a single **Podman** container that also runs **cloudflared**, exposing the site over a [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/) — no open inbound ports required.
+
+### Files
+
+| File             | Purpose                                                            |
+| ---------------- | ------------------------------------------------------------------ |
+| `Containerfile`  | Builds a Python 3.13 image with gunicorn + cloudflared             |
+| `entrypoint.sh`  | Starts gunicorn and cloudflared together, with graceful shutdown   |
+| `manage.sh`      | Lifecycle helper: build / start / stop / restart / logs / cleanup  |
+| `.env.example`   | Template for the required `CLOUDFLARED_TOKEN`                      |
+
+### One-time setup on the Fedora server
+
+1. Install Podman: `sudo dnf install -y podman`
+2. Create a Cloudflare Tunnel in **Cloudflare Zero Trust → Networks → Tunnels**, point it at `http://localhost:8000`, and copy the connector token.
+3. Copy the project to the server (e.g. `git clone …`), then:
+   ```bash
+   cp .env.example .env
+   # edit .env and set CLOUDFLARED_TOKEN=<your token>
+   ```
+
+### Lifecycle commands
+
+```bash
+./manage.sh build      # build the image
+./manage.sh start      # build (if needed) + run detached
+./manage.sh logs       # follow logs from the container
+./manage.sh status     # show container status
+./manage.sh stop       # stop and remove the container
+./manage.sh restart    # stop + start
+./manage.sh cleanup    # remove container, image, and dangling layers
+```
+
+### How the container works
+
+- **gunicorn** serves the Flask app on `0.0.0.0:8000` with 2 workers (override via `GUNICORN_WORKERS`).
+- **cloudflared** runs alongside it inside the same container, connecting to Cloudflare with the supplied token.
+- A small `entrypoint.sh` traps `SIGTERM`/`SIGINT` so `podman stop` cleanly terminates both processes.
+- `tini` is used as PID 1 to reap zombie processes from the two background workers.
+- The container runs as a non-root user (`appuser`, uid 1001).
+
+### Optional: run as a systemd service
+
+To have the container start on boot and survive reboots:
+
+```bash
+# After ./manage.sh start
+podman generate systemd --new --name personalsite > ~/.config/systemd/user/personalsite.service
+systemctl --user daemon-reload
+systemctl --user enable --now personalsite.service
+loginctl enable-linger "$USER"   # so it runs without you logged in
+```
+
+---
+
 ## Design / CSS
 
 The site uses an **Apple-inspired "Liquid Glass"** aesthetic — translucent, frosted-glass cards floating above a soft, slowly-drifting aurora backdrop. The look is implemented in [`templates/base.html`](templates/base.html) using a small set of custom CSS classes layered on top of Tailwind utilities.
