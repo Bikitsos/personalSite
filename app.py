@@ -4,16 +4,7 @@ app = Flask(__name__)
 
 BIO = {
     "name": "Panayiotis Papallis",
-    "title": "Technical Director at DB immix",
     "location": "Nicosia, Cyprus",
-    "tagline": "Infrastructure Engineer · Databases · Python · C",
-    "about": (
-        "I maintain infrastructure for servers and POS systems, with a strong "
-        "background in databases, Python and C. Over 15+ years across "
-        "technical support, hardware, and systems engineering — I enjoy "
-        "building small, useful web tools alongside my day-to-day work. "
-        "A few of those tools are showcased below."
-    ),
 }
 
 CONTACTS = [
