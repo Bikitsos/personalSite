@@ -31,7 +31,7 @@ SKILL_GROUPS = [
         "items": [
             "Linux Server Administration",
             "Windows Server",
-            "Virtualization (Proxmox, VMware, Hyper-V)",
+            "Virtualization (Proxmox, KVM, VMware, Hyper-V)",
             "High-Availability & Failover Design",
             "Backup, Disaster Recovery & Business Continuity",
             "Monitoring & Observability",
@@ -52,7 +52,8 @@ SKILL_GROUPS = [
         "title": "Cloud & DevOps",
         "items": [
             "Cloud Computing (AWS, Azure, Hetzner)",
-            "Docker & Containerization",
+            "Containers (Docker, Podman)",
+            "Kubernetes Orchestration",
             "Infrastructure as Code",
             "CI/CD Pipelines",
             "Reverse Proxies & TLS (Nginx, Caddy)",
