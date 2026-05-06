@@ -85,13 +85,46 @@ The site is designed to run on a Fedora server inside a single **Podman** contai
 
 ```bash
 ./manage.sh build      # build the image
-./manage.sh start      # build (if needed) + run detached
+./manage.sh start      # build (if needed) + run detached (one-off)
 ./manage.sh logs       # follow logs from the container
 ./manage.sh status     # show container status
 ./manage.sh stop       # stop and remove the container
 ./manage.sh restart    # stop + start
+./manage.sh install    # install as a systemd service — auto-start on boot (recommended)
+./manage.sh uninstall  # remove the systemd service
 ./manage.sh cleanup    # remove container, image, and dangling layers
 ```
+
+### Running it permanently (auto-start on boot)
+
+For production use, install the container as a **rootless systemd service** via [Podman Quadlet](https://docs.podman.io/en/latest/markdown/podman-systemd.unit.5.html) — the modern Fedora-recommended way:
+
+```bash
+./manage.sh install
+```
+
+This will:
+
+1. Build the image if it doesn't exist.
+2. Write a Quadlet unit to `~/.config/containers/systemd/personalsite.container`.
+3. Enable **lingering** (`loginctl enable-linger $USER`) so the service runs even when you're logged out.
+4. Reload user systemd and start `personalsite.service`.
+
+Once installed, the container will:
+
+- **Start automatically on boot.**
+- **Restart on crash** (`Restart=always`, 5-second backoff).
+- **Survive logout** thanks to user-linger.
+
+Manage it with the standard systemd tools:
+
+```bash
+systemctl --user status  personalsite.service
+systemctl --user restart personalsite.service
+journalctl --user -u     personalsite.service -f
+```
+
+To remove the service: `./manage.sh uninstall`.
 
 ### How the container works
 
@@ -100,18 +133,6 @@ The site is designed to run on a Fedora server inside a single **Podman** contai
 - A small `entrypoint.sh` traps `SIGTERM`/`SIGINT` so `podman stop` cleanly terminates both processes.
 - `tini` is used as PID 1 to reap zombie processes from the two background workers.
 - The container runs as a non-root user (`appuser`, uid 1001).
-
-### Optional: run as a systemd service
-
-To have the container start on boot and survive reboots:
-
-```bash
-# After ./manage.sh start
-podman generate systemd --new --name personalsite > ~/.config/systemd/user/personalsite.service
-systemctl --user daemon-reload
-systemctl --user enable --now personalsite.service
-loginctl enable-linger "$USER"   # so it runs without you logged in
-```
 
 ---
 
