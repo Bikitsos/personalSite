@@ -20,7 +20,6 @@ set -euo pipefail
 IMAGE_NAME="${IMAGE_NAME:-personalsite}"
 IMAGE_TAG="${IMAGE_TAG:-latest}"
 CONTAINER_NAME="${CONTAINER_NAME:-personalsite}"
-HOST_PORT="${HOST_PORT:-8000}"
 APP_PORT="${APP_PORT:-8000}"
 SERVICE_NAME="${SERVICE_NAME:-personalsite}"
 QUADLET_DIR="${QUADLET_DIR:-${HOME}/.config/containers/systemd}"
@@ -61,11 +60,10 @@ cmd_start() {
     cmd_build
   fi
 
-  echo ">> Starting ${CONTAINER_NAME} on host port ${HOST_PORT}"
+  echo ">> Starting ${CONTAINER_NAME} (no host port published — reachable via cloudflared)"
   podman run -d \
     --name "${CONTAINER_NAME}" \
     --restart unless-stopped \
-    -p "${HOST_PORT}:${APP_PORT}" \
     -e "APP_PORT=${APP_PORT}" \
     -e "CLOUDFLARED_TOKEN=${CLOUDFLARED_TOKEN}" \
     "${IMAGE_NAME}:${IMAGE_TAG}"
@@ -139,7 +137,6 @@ Wants=network-online.target
 [Container]
 ContainerName=${CONTAINER_NAME}
 Image=localhost/${IMAGE_NAME}:${IMAGE_TAG}
-PublishPort=${HOST_PORT}:${APP_PORT}
 Environment=APP_PORT=${APP_PORT}
 Environment=CLOUDFLARED_TOKEN=${CLOUDFLARED_TOKEN}
 
@@ -204,8 +201,7 @@ Environment variables (override defaults):
   IMAGE_NAME       (default: personalsite)
   IMAGE_TAG        (default: latest)
   CONTAINER_NAME   (default: personalsite)
-  HOST_PORT        (default: 8000)
-  APP_PORT         (default: 8000)
+  APP_PORT         (default: 8000, internal only — not published to host)
   SERVICE_NAME     (default: personalsite)
   CLOUDFLARED_TOKEN  (required for 'start' and 'install')
 

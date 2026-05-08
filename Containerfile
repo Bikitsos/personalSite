@@ -36,7 +36,5 @@ RUN useradd --system --uid 1001 --home-dir ${APP_HOME} appuser \
  && chown -R appuser:appuser ${APP_HOME}
 USER appuser
 
-EXPOSE 8000
-
 # tini reaps zombie processes from the two background workers
 ENTRYPOINT ["/usr/bin/tini", "--", "/usr/local/bin/entrypoint.sh"]

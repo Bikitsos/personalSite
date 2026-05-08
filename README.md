@@ -74,7 +74,7 @@ The site is designed to run on a Fedora server inside a single **Podman** contai
 ### One-time setup on the Fedora server
 
 1. Install Podman: `sudo dnf install -y podman`
-2. Create a Cloudflare Tunnel in **Cloudflare Zero Trust → Networks → Tunnels**, point it at `http://localhost:8000`, and copy the connector token.
+2. Create a Cloudflare Tunnel in **Cloudflare Zero Trust → Networks → Tunnels**, point its public hostname at `http://localhost:8000` (the cloudflared client runs *inside* the container alongside the Flask app, so this resolves to the in-container gunicorn). Copy the connector token.
 3. Copy the project to the server (e.g. `git clone …`), then:
    ```bash
    cp .env.example .env
@@ -128,8 +128,8 @@ To remove the service: `./manage.sh uninstall`.
 
 ### How the container works
 
-- **gunicorn** serves the Flask app on `0.0.0.0:8000` with 2 workers (override via `GUNICORN_WORKERS`).
-- **cloudflared** runs alongside it inside the same container, connecting to Cloudflare with the supplied token.
+- **gunicorn** serves the Flask app on `0.0.0.0:8000` *inside the container only* with 2 workers (override via `GUNICORN_WORKERS`).
+- **cloudflared** runs alongside it inside the same container, connecting outbound to Cloudflare with the supplied token. It reaches gunicorn over the container's loopback — **no host port is published**, so nothing is exposed on the server's network.
 - A small `entrypoint.sh` traps `SIGTERM`/`SIGINT` so `podman stop` cleanly terminates both processes.
 - `tini` is used as PID 1 to reap zombie processes from the two background workers.
 - The container runs as a non-root user (`appuser`, uid 1001).
