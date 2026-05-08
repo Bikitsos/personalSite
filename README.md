@@ -7,6 +7,7 @@ Live tools showcased:
 - [whatismyip.bikitsos.com](https://whatismyip.bikitsos.com)
 - [snaptrack.bikitsos.com](https://snaptrack.bikitsos.com)
 - [bgremover.bikitsos.com](https://bgremover.bikitsos.com)
+- [domain-analyzer.bikitsos.com](https://domain-analyzer.bikitsos.com)
 
 ---
 

@@ -112,6 +112,11 @@ PROJECTS = [
         "url": "https://bgremover.bikitsos.com",
         "description": "Remove backgrounds from images right in your browser.",
     },
+    {
+        "name": "Domain Analyzer",
+        "url": "https://domain-analyzer.bikitsos.com",
+        "description": "Inspect any domain — DNS records, WHOIS, and hosting details at a glance.",
+    },
 ]
 
 
